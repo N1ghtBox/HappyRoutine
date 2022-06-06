@@ -113,7 +113,6 @@ const Header: FC = () => {
       </div>
     );
   }
-
   if (session) {
     left = (
       <div className="left">
