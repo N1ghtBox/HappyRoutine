@@ -1,7 +1,25 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Header from './Header'
+import Header from '../components/Header'
+import { getSession } from 'next-auth/react'
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context)
+
+  if (!session ) {
+    return {
+      redirect: {
+        destination: '/api/auth/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session }
+  }
+}
 
 const Home: NextPage = () => {
   return (

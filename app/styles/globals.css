@@ -1,3 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+  --main: #2C363F;
+  --pink:#E75A7C;
+  --lighter-gray:#F2F5EA;
+  --gray: #D6DBD2;
+  --green:#BBC7A4;
+}
 html,
 body {
   padding: 0;
