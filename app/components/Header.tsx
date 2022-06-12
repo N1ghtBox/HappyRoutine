@@ -3,18 +3,16 @@ import {  MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header() {
+interface IProps{
+  navigation:{name: string, href:string, current: boolean}[]
+}
+
+export default function Header(props: IProps) {
   const { data: session, status } = useSession();
 
 
@@ -45,7 +43,7 @@ export default function Header() {
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {props.navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
@@ -87,7 +85,7 @@ export default function Header() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {navigation.map((item) => (
+              {props.navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
