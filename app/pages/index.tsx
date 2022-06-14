@@ -30,7 +30,7 @@ const navigation = [
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
-      <Header navigation={navigation}/>
+      <Header navigation={navigation} renderAddButton={true}/>
       <div style={{display:'flex', width:'80vw', height:'100vh', justifyContent:'space-evenly', alignItems:'center', marginInline:'auto'}}>
         <TaskView color={'#f00'} done={5} max={7} type={'Dzienne'}/>
         <TaskView color={'#0f0'} done={4} max={10} type={'Tygodniowe'}/>
