@@ -29,7 +29,7 @@ const navigation = [
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
-      <Header navigation={navigation}/>
+      <Header navigation={navigation} renderAddButton={false}/>
     </div>
   )
 }
