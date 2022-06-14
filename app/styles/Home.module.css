@@ -7,3 +7,6 @@
 .addButton:hover{
     background-color: var(--lighter-pink);
 }
+.lightGrayBg{
+    background-color: var(--lighter-main);
+}

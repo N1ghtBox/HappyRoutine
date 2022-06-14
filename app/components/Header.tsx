@@ -16,7 +16,6 @@ interface IProps{
 export default function Header(props: IProps) {
   const { data: session, status } = useSession();
 
-
   return (
     <Disclosure as="nav" style={{backgroundColor:'var(--main)'}}>
       {({ open }:{open: any}) => (
@@ -49,7 +48,7 @@ export default function Header(props: IProps) {
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          item.current ? `${styles.lightGrayBg} text-white` : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}

@@ -3,6 +3,7 @@
 @tailwind utilities;
 :root{
   --main: #2C363F;
+  --lighter-main: #4a5b69;
   --pink:#E75A7C;
   --lighter-pink:#F96B8D;
   --lighter-gray:#F2F5EA;
