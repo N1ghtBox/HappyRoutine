@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.css'
 import Header from '../components/Header'
 import { TaskView } from '../components/TaskView'
 import { getSession } from 'next-auth/react'
+import { AddModal } from '../components/AddModal'
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context)
@@ -30,6 +31,7 @@ const navigation = [
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
+      {/* <AddModal/> */}
       <Header navigation={navigation} renderAddButton={true}/>
       <div style={{display:'flex', width:'80vw', height:'100vh', justifyContent:'space-evenly', alignItems:'center', marginInline:'auto'}}>
         <TaskView color={'#f00'} done={5} max={7} type={'Dzienne'}/>

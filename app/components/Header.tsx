@@ -61,8 +61,8 @@ export default function Header(props: IProps) {
               </div>
               {props.renderAddButton ? <button
                 className={classNames('text-white',
-                'px-3 py-2 rounded-md text-sm font-medium', styles.addButton)} >
-                  <PlusIcon className='block h-6 w-6'/>
+                'px-3 py-2 rounded-md text-sm font-medium', styles.addButton)} data-modal-toggle='modal'>
+                  <PlusIcon className='block h-6 w-6' />
                 Add new
               </button>: null}
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
