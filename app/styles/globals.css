@@ -1,16 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+  --main: #2C363F;
+  --pink:#E75A7C;
+  --lighter-gray:#F2F5EA;
+  --gray: #D6DBD2;
+  --green:#BBC7A4;
+}
 html,
 body {
-  padding: 0;
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
