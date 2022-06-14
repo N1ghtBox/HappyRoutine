@@ -2,7 +2,6 @@ import type { NextPage } from 'next'
 import styles from '../../styles/Strefa.module.css'
 import { getSession } from 'next-auth/react'
 import Header from '../../components/Header'
-import { TaskView } from '../../components/TaskView'
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context)

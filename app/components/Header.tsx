@@ -1,8 +1,7 @@
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Disclosure, Menu } from '@headlessui/react'
 import {  MenuIcon, XIcon, LogoutIcon } from '@heroicons/react/outline'
 import Link from 'next/link'
-import { signOut, useSession } from 'next-auth/react'
-
+import { getSession, signOut, useSession } from 'next-auth/react'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
