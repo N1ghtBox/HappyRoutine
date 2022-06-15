@@ -31,7 +31,7 @@ const navigation = [
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
-      {/* <AddModal/> */}
+      <AddModal/>
       <Header navigation={navigation} renderAddButton={true}/>
       <div style={{display:'flex', width:'80vw', height:'100vh', justifyContent:'space-evenly', alignItems:'center', marginInline:'auto'}}>
         <TaskView color={'#f00'} done={5} max={7} type={'Dzienne'}/>
