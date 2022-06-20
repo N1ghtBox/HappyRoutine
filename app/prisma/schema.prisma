@@ -51,3 +51,17 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Tasks{
+  id            String    @id @default(cuid())
+  userId       String
+  type        TaskType
+  description  String
+}
+
+enum TaskType{
+  daily
+  weekly
+  monthly
+  yearly
+}
