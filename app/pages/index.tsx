@@ -34,7 +34,7 @@ const navigation = [
 
 const Home = ({ session, apiKey }: any) => {
   return (
-    <Container css={{w:'100%', background:'$colors$light', mw:'100%', mh:'100vh', oy:'hidden'}}>
+    <Container css={{w:'100%', background:'$colors$light', mw:'100%', mh:'100vh', oy:'hidden', px:'0'}}>
       {/* <AddModal/> */}
       <Header navigation={navigation} renderAddButton={true}/>
       <div style={{display:'flex', width:'80vw', height:'100vh', justifyContent:'space-evenly', alignItems:'center', marginInline:'auto'}}>
