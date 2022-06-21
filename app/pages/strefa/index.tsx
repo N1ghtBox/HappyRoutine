@@ -26,10 +26,10 @@ const navigation = [
     { name: 'O mnie', href: '#', current: false },
   ]
 
-const Home: NextPage = () => {
+const Home: NextPage = ({session}:any) => {
   return (
     <div className={styles.container}>
-      <Header navigation={navigation} renderAddButton={false}/>
+      <Header navigation={navigation} renderAddButton={false} session={session}/>
     </div>
   )
 }
