@@ -13,7 +13,7 @@ export const TaskView= (props: IProps) => {
                 </svg>
                 <div className={styles.amount}>
                     <h2>{props.done} / {props.max}</h2>
-                    <p>{props.type}</p>
+                    <p style={{margin:'0'}}>{props.type}</p>
                 </div>
             </div>
         </div>

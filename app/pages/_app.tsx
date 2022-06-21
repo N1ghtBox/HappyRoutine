@@ -16,7 +16,8 @@ const theme = createTheme({
       text:'#D6DBD2',
       textHover:'#F2F5EA',
       secondaryGreen: '#BBC7A4',
-
+      error:'#eb2344',
+      success:'#99f0a5',
     },
     space: {},
     fonts: {}

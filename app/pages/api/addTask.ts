@@ -12,8 +12,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(401)
         res.end()
     }
-    prisma.tasks.create({data:req.body})
-    await prisma.$disconnect()
-    res.status(204)
-    res.end()
+    delete req.body.id;
+    prisma.tasks.create({data:{...req.body}})
+    .then(async ()=>{
+        await prisma.$disconnect()
+        res.status(204)
+        res.end()
+    })
+    .catch((e)=>{
+        res.status(400)
+        res.statusMessage = 'Coś poszło nie tak'
+        res.end()
+    })
+
 }
