@@ -57,6 +57,7 @@ model Tasks{
   userId       String
   type        TaskType
   description  String
+  done        Boolean
 }
 
 enum TaskType{

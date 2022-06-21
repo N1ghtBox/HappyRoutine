@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import prisma from "../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if(req.method !== 'POST') {
+    if(req.method !== 'GET') {
         res.status(405)
         res.end()
     }
@@ -12,17 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(401)
         res.end()
     }
-    delete req.body.id;
-    await prisma.tasks.create({data:{...req.body}})
-    .then(async ()=>{
-        await prisma.$disconnect()
-        res.status(204)
-        res.end()
-    })
-    .catch((e)=>{
-        res.status(400)
-        res.statusMessage = 'Coś poszło nie tak'
-        res.end()
-    })
-
+    let result = await prisma.tasks.findMany({where:{userId: (session!.user as any).id}})
+    await prisma.$disconnect()
+    res.status(200).send(JSON.stringify(result))
+    res.end()
 }

@@ -1,8 +1,9 @@
+import { Tasks } from '@prisma/client';
 import styles from '../styles/Task.module.css'
 
-export const TaskView= (props: IProps) => {
+export const TaskView = (props: IProps) => {
 
-    const style = {'--clr':props.color, '--num':(props.done / props.max *100).toString()} as React.CSSProperties;
+    const style = {'--clr':props.color, '--num':(props.tasks.filter(item => item.done).length / props.tasks.length *100).toString()} as React.CSSProperties;
     return (
         <div className={styles.card}>
             <div className={styles.percent} style={style}>
@@ -12,7 +13,7 @@ export const TaskView= (props: IProps) => {
                     <circle cx={'70'} cy={'70'} r={'70'}></circle>
                 </svg>
                 <div className={styles.amount}>
-                    <h2>{props.done} / {props.max}</h2>
+                    <h2>{props.tasks.filter(item => item.done).length} / {props.tasks.length}</h2>
                     <p style={{margin:'0'}}>{props.type}</p>
                 </div>
             </div>
@@ -22,7 +23,6 @@ export const TaskView= (props: IProps) => {
 
 interface IProps{
     color: string,
-    done: number,
-    max: number,
     type: string,
+    tasks: Tasks[],
 }

@@ -3,6 +3,7 @@ import { BookmarkIcon } from '@heroicons/react/outline'
 import { EmojiHappyIcon } from '@heroicons/react/solid'
 import { TaskType } from "@prisma/client";
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
 
 interface IProps{
     visible: boolean;
@@ -25,6 +26,7 @@ export default function AddModal(props: IProps) {
     const [selected, setSelected] = useState<string>('Typ');
     const [isValid, setValid] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+    const router = useRouter()
 
     const {
         value: description,
