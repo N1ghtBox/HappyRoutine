@@ -10,6 +10,9 @@ const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
 
 const options = {
+  session:{
+    maxAge:60 * 60 * 3,
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID!,

@@ -1,12 +1,6 @@
-.addButton{
-    background-color: var(--pink);
-    display: flex;
-    align-items: center;
-    gap:5px;
-}
-.addButton:hover{
-    background-color: var(--lighter-pink);
-}
-.lightGrayBg{
-    background-color: var(--lighter-main);
+.link{
+    height:fit-content;
+    padding:6px 10px;
+    border-radius: 10px;
+    color: #D6DBD2;
 }

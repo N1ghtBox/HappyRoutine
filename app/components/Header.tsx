@@ -1,114 +1,84 @@
-import { Disclosure, Menu } from '@headlessui/react'
-import {  MenuIcon, XIcon, LogoutIcon, PlusIcon } from '@heroicons/react/outline'
-import Link from 'next/link'
-import { signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
+import { Avatar, Button, Card, Container, Grid, Link, Row, Spacer, Text } from '@nextui-org/react'
+import { Image } from "@nextui-org/react";
+import { LogoutIcon, PlusIcon } from '@heroicons/react/outline'
 import styles from '../styles/Home.module.css'
-
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 interface IProps{
   navigation:{name: string, href:string, current: boolean}[],
   renderAddButton: boolean,
+  openModal?: () => void;
+  session: any;
 }
 
+const Active = {backgroundColor:'$colors$primaryLightHover'}
+
+const MockLogo = () => {
+  return (
+    <Card css={{ h: "$14", $$cardColor: 'transparent', width:'fit-content'}}>
+      <Card.Body css={{oy:'hidden', justifyContent:'center', alignItems:'center',p:'0'}} >
+        <Image
+          width={70}
+          height={70}
+          src="https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
+          alt="Default Image"
+          objectFit="cover"
+        />
+      </Card.Body>
+    </Card>
+  );
+};
+
 export default function Header(props: IProps) {
-  const { data: session, status } = useSession();
 
   return (
-    <Disclosure as="nav" style={{backgroundColor:'var(--main)'}}>
-      {({ open }:{open: any}) => (
-        <>
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-16">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-              <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex-shrink-0 flex items-center">
-                  <img
-                    className="hidden lg:block h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
-                    alt="Workflow"
-                  />
-                </div>
-                <div className="hidden sm:block sm:ml-6">
-                  <div className="flex space-x-4">
-                    {props.navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current ? `${styles.lightGrayBg} text-white` : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
+    <Container fluid css={{mw:'100%', px:'0'}}>
+      <Card css={{ $$cardColor: '$colors$primaryGray', br: 0 }}>
+        <Card.Body>
+          <Row justify="center" align="center">
+          <Grid.Container gap={2} justify="center">
+            <Grid xs={4} css={{p:'0'}} justify='flex-start' alignItems='center'>
+              <MockLogo />
+              {
+                props.navigation.map(item => (
+                  <div style={{height:'fit-content', display:'flex'}} key={`${item.name} ${item.href}`}>
+                    <Spacer x={2}/>
+                    <Link href={item.href} css={item.current ? Active : {}}  className={styles.link}>
+                      {item.name}
+                    </Link>
                   </div>
-                </div>
-              </div>
-              {props.renderAddButton ? <button
-                className={classNames('text-white',
-                'px-3 py-2 rounded-md text-sm font-medium', styles.addButton)} >
-                  <PlusIcon className='block h-6 w-6'/>
-                Add new
-              </button>: null}
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Profile dropdown */}
-                <Menu as="div" className="mr-3 relative">
-                  <Link href={'/profile'}>
-                    <div>
-                      <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={session?.user?.image || ""}
-                        />
-                      </Menu.Button>
-                    </div>
-                  </Link>
-                </Menu>
-                <button
-                  type="button"
-                  className="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                >
-                  <LogoutIcon className="h-6 w-6" aria-hidden="true" onClick={() => {signOut()}} />
-                </button>
-              </div>
-            </div>
-          </div>
+                ))
+              }
+            </Grid>
+            <Spacer x={2} />
+            <Grid xs={4} css={{p:'0', oy:'hidden' }} justify='flex-end'alignItems='center'>
+              {props.renderAddButton ? <><Button
+                key={'buttonKey'}
+                auto
+                icon={<PlusIcon height={25}/>}
+                css={{bg:'$colors$primary', py:'3px'}}
+                onClick={()=>props.openModal!()}
+                >Add new</Button>
+              <Spacer x={1} key={'spacerKey'}/></> : null}
 
-          <Disclosure.Panel className="sm:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {props.navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
+              <Avatar
+                zoomed
+                squared
+                src={props.session?.user?.image || ''}
+              />
+              <Spacer x={1}/>
+              <Button
+                rounded
+                auto
+                icon={<LogoutIcon height={35}/>}
+                css={{backgroundColor:'transparent'}}
+                onClick={() => signOut()}
+              />
+            </Grid>
+          </Grid.Container>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Container>
   )
 }
