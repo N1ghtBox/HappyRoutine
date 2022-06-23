@@ -1,4 +1,4 @@
-import { Progress, Table, Text } from '@nextui-org/react';
+import { Table, Text } from '@nextui-org/react';
 import { Tasks } from '@prisma/client';
 import { useMediaQuery } from '../pages/_helpers/_mediaQuery';
 import styles from '../styles/Task.module.css'
