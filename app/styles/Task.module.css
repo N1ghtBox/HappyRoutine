@@ -109,13 +109,11 @@
     align-items: center;
     color: #fff;
     font-weight: 700;
-    font-size: 2.5em;
+    font-size: 3vmax;
 }
-.amount p{
-    font-weight: 300;
-    font-size: 0.75em ;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color:rgba(255,255,255,0.75);
 
+.table{
+    -webkit-box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
+    box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
 }

@@ -52,6 +52,7 @@ export const TaskView = (props: IProps) => {
                             height: "auto",
                             minWidth: "80%",
                         }}
+                        className={styles.table}
                     >
                         <Table.Header>
                             <Table.Column>Opis</Table.Column>
