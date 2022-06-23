@@ -20,7 +20,14 @@ const theme = createTheme({
       success:'#99f0a5',
     },
     space: {},
-    fonts: {}
+    fonts: {},
+    breakpoints: {
+      xs: '650px',
+      sm: '960px',
+      md: '1280px',
+      lg: '1400px',
+      xl: '1920px'
+    }
   }
 })
 
