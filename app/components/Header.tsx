@@ -56,7 +56,7 @@ export default function Header(props: IProps) {
                 key={'buttonKey'}
                 auto
                 icon={<PlusIcon height={25}/>}
-                css={{bg:'$colors$primary', py:'3px'}}
+                css={{bg:'var(--pink)'}}
                 onClick={()=>props.openModal!()}
                 >Add new</Button>
               <Spacer x={1} key={'spacerKey'}/></> : null}

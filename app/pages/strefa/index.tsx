@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import styles from '../../styles/Strefa.module.css'
-import { getSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import Header from '../../components/Header'
 
 export async function getServerSideProps(context: any) {
@@ -26,7 +26,9 @@ const navigation = [
     { name: 'O mnie', href: '#', current: false },
   ]
 
-const Home: NextPage = ({session}:any) => {
+const Home = () => {
+  const { data: session } = useSession();
+
   return (
     <div className={styles.container}>
       <Header navigation={navigation} renderAddButton={false} session={session}/>
