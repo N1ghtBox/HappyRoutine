@@ -5,7 +5,7 @@ import styles from '../styles/Task.module.css'
 import { capitalizeFirstLetter } from './Modal/AddModal';
 
 export const TaskView = (props: IProps) => {
-    const done = props.tasks.filter(item => item.done).length || 0;
+    const done = props.tasks.filter((item: any) => item.done).length || 0;
     const max = props.tasks.length || 1;
 
     const getColorOfBall = (text: string) => {
