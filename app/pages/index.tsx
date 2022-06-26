@@ -66,7 +66,7 @@ const Home = ({apiKey, tasks}: any) => {
     if(!tasks) return
     setTasksList(tasks)
     setLoading(false)
-  },[])
+  },[]) //eslintreact-hooks/exhaustive-deps
 
   const fetchNewTasks = () => {
     fetch('/api/getAllTasks',{
