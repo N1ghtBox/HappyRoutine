@@ -95,7 +95,7 @@ const Home = ({apiKey, tasks}: any) => {
           session={session}/>
 
         <Grid.Container gap={6} justify={'center'} alignContent='center' css={{marginInline:'auto', width:'95vw', minHeight:'calc(100vh - 72px)', maxHeight:'fit-content'}}>
-          {!loading ? <Grid xs={1}>
+          {loading ? <Grid xs={1}>
             <Loading color="primary" textColor="primary" size='lg'>
               Ładowanie
             </Loading>
