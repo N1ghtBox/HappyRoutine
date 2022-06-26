@@ -21,7 +21,7 @@ export const useMediaQuery = (width: any)=> {
     }
 
     return () => media.removeListener(updateTarget);
-  }, []);
+  }, []);//eslintreact-hooks/exhaustive-deps
 
   return targetReached;
 };

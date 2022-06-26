@@ -42,7 +42,7 @@ export default function AddModal(props: IProps) {
         if(!description) return setValid(false)
         if(!selectedValue || selectedValue === 'Typ') return setValid(false)
         return setValid(true)
-    },[description, selectedValue])
+    },[description, selectedValue]) //eslintreact-hooks/exhaustive-deps
 
     useEffect(() => {
         if(success){

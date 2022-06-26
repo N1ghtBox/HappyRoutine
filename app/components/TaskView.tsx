@@ -1,6 +1,6 @@
 import { Table, Text } from '@nextui-org/react';
 import { Tasks } from '@prisma/client';
-import { useMediaQuery } from '../pages/_helpers/_mediaQuery';
+import { useMediaQuery } from '../lib/_helpers/_mediaQuery';
 import styles from '../styles/Task.module.css'
 import { capitalizeFirstLetter } from './Modal/AddModal';
 
