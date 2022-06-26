@@ -1,0 +1,30 @@
+name: restart-tasks
+
+on:
+  schedule:
+    - cron: '00 1 * * 1'
+    - cron: '00 1 * * *'
+    - cron: '00 1 1 * *'
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every day
+        if: github.event.schedule == '00 1 * * *'
+        run: |
+          curl --request PUT |
+          --url 'https://happy-routine-n1ghtbox.vercel.app/updateTasks?type=daily' \
+          --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
+      - name: Every Monday
+        if: github.event.schedule == '00 1 * * 1'
+        run: |
+          curl --request PUT |
+          --url 'https://happy-routine-n1ghtbox.vercel.app/updateTasks?type=weekly' \
+          --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
+      - name: Every month
+        if: github.event.schedule == '00 1 1 * *'
+        run: |
+          curl --request PUT |
+          --url 'https://happy-routine-n1ghtbox.vercel.app/updateTasks?type=monthly' \
+          --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
