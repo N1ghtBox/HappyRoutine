@@ -6,6 +6,7 @@ on:
     - cron: '00 1 * * *'
     - cron: '00 1 1 * *'
     - cron: '00 1 1 1 *'
+    - cron: '5 * * * *'
 
 jobs:
   cron:
@@ -34,5 +35,11 @@ jobs:
         run: |
           curl --request PUT \
           --url 'https://happy-routine-n1ghtbox.vercel.app/updateTasks/yearly' \
+          --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
+      - name: Test job
+        if: github.event.schedule == '5 * * * *'
+        run: |
+          curl --request PUT \
+          --url 'https://happy-routine-n1ghtbox.vercel.app/updateTasks/daily' \
           --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
 
