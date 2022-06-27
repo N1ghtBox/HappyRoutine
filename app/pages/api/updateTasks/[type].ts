@@ -8,8 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405)
         res.end()
     }
-    let session = await getSession({req})
-    if(!session){
+    if(req.headers.authorization && req.headers.authorization !== process.env.UPDATE_KEY){
         res.status(401)
         res.end()
     }
