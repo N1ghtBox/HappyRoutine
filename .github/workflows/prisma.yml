@@ -11,5 +11,8 @@ jobs:
 
     steps:
       - name: Run prisma client generate
-        run: |
-          echo $PATH
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: |
+          npx prisma generate
