@@ -9,6 +9,7 @@ interface IProps{
     visible: boolean;
     onClose: () => void;
     onSubmit: (modalData: {description: string, type: TaskType}) => boolean
+    selectedType?: TaskType
 }
 
 const Types = [
@@ -34,6 +35,11 @@ export default function AddModal(props: IProps) {
         bindings,
     } = useInput('')
 
+    useEffect(() => {
+      if(props.selectedType) setSelected(props.selectedType)
+      if(!props.visible) restartDataWitDelay(300)
+    }, [props.selectedType, props.visible])
+
     const selectedValue = useMemo(
       () => Array.from(selected).join(""),
       [selected]);
@@ -53,6 +59,13 @@ export default function AddModal(props: IProps) {
         }
     }, [success])
 
+    const restartDataWitDelay = (delay: number) =>{
+      setTimeout(()=>{
+        setSelected('Typ')
+        setDescription('')
+      }, delay)
+    }
+
   return (
     <div>
       <Modal
@@ -60,7 +73,7 @@ export default function AddModal(props: IProps) {
         closeButton
         aria-labelledby="modal-title"
         open={props.visible}
-        onClose={() => {props.onClose(); setSelected('Typ'); setDescription('')}}
+        onClose={() => {props.onClose(); }}
       >
         {success ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'#99f0a5', minW:'fit-content', mw:'fit-content'}}>
           <Card.Body>

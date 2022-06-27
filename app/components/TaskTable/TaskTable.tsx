@@ -2,10 +2,14 @@ import { Table, Row, Col, Popover } from "@nextui-org/react";
 import { TrashIcon, PencilAltIcon, XIcon, CheckIcon } from '@heroicons/react/outline'
 import { IconButton } from "./IconButton";
 import { StatusBadge } from "./StatusBadge";
-import { Tasks } from "@prisma/client";
+import { Tasks, TaskType } from "@prisma/client";
 import { DeleteTask } from "./DeleteTask";
+import { useEffect, useState } from "react";
+import styles from '../../styles/Task.module.css'
+
 
 export const TaskTable = (props: IProps) => {
+  const [Tasks, setTasks] = useState<Tasks[]>([])
 
   const columns = [
     { name: "STATUS", uid: "status" },
@@ -15,6 +19,10 @@ export const TaskTable = (props: IProps) => {
   const sortByDone = (a: Tasks, b: Tasks) =>{
     return a.done === b.done ? 0 : a.done? 1 : -1;
   }
+
+  useEffect(()=>{
+    if(props.tasks) setTasks(props.tasks)
+  },[])
 
   const renderCell = (task: Tasks, columnKey: any) => {
     const cellValue = (task as any)[columnKey];
@@ -66,6 +74,7 @@ export const TaskTable = (props: IProps) => {
         }}
         selectionMode="none"
         shadow={false}
+        className={styles.scaleUp}
       >
         <Table.Header columns={columns}>
           {(column) => (
@@ -80,7 +89,7 @@ export const TaskTable = (props: IProps) => {
             </Table.Column>
           )}
         </Table.Header>
-        <Table.Body items={props.tasks.sort(sortByDone)}>
+        <Table.Body items={Tasks.sort(sortByDone)}>
           {(item: Tasks) => (
             <Table.Row css={{color:'inherit'}} key={item.id}>
               {(columnKey) => (
@@ -96,5 +105,5 @@ export const TaskTable = (props: IProps) => {
 
 interface IProps{
   tasks: Tasks[],
-  onClose: () => void
+  onClose: () => void,
 }

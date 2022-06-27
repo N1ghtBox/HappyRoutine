@@ -9,8 +9,9 @@ export const TaskView = (props: IProps) => {
     const max = props.tasks.length || 1;
 
     const getColorOfBall = (text: string) => {
-        let color = text.split(' ')[text.split(' ').length -2].slice(1)
-        return `var(--nextui-colors-${color})`
+        let color = text.split(' ')[text.split(' ').length -2]
+        if(color[0] === '$') return `var(--nextui-colors-${color.slice(1)})`
+        return color
     }
 
     const isSm = useMediaQuery(650);
