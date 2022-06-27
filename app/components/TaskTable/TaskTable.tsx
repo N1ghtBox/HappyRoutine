@@ -13,7 +13,7 @@ const TaskTable = (props: IProps) => {
   ];
 
   const renderCell = (task: Tasks, columnKey: any) => {
-    const cellValue = task[columnKey];
+    const cellValue = (task as any)[columnKey];
     
     switch (columnKey) {
       case "status":
