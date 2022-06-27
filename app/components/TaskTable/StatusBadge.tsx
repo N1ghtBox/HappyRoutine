@@ -22,7 +22,8 @@ export const StatusBadge = styled('span', {
       },
       notDone: {
         bg: '$errorLight',
-        color: '$errorLightContrast'
+        color: '$errorLightContrast',
+        cursor:'pointer'
       }
     }
   },

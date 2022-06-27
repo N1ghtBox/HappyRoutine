@@ -57,7 +57,7 @@ export default function Header(props: IProps) {
                 auto
                 icon={<PlusIcon height={25}/>}
                 css={{bg:'var(--pink)'}}
-                onClick={()=>props.openModal!()}
+                onPress={()=>props.openModal!()}
                 >Add new</Button>
               <Spacer x={1} key={'spacerKey'}/></> : null}
 

@@ -40,6 +40,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  doneDaily    Boolean @default(false)
+  doneWeekly    Boolean @default(false)
+  doneMonthly    Boolean @default(false)
+  doneYearly    Boolean @default(false)
   accounts      Account[]
   sessions      Session[]
 }

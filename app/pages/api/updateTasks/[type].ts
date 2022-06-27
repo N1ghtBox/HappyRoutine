@@ -32,6 +32,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.statusMessage = 'Coś poszło nie tak'
         res.end()
     })
+
+    await prisma.user.updateMany(getBodyForRequest(type))
+
+    prisma.$disconnect()
     res.status(200)
     res.end()
+}
+
+function getBodyForRequest(type: string):any{
+    if(type === 'daily') return {data:{doneDaily: false}}
+    if(type === 'weekly') return {data:{doneWeekly: false}}
+    if(type === 'monthly') return {data:{doneMonthly: false}}
+    return {data:{doneYearly: false}}
 }
