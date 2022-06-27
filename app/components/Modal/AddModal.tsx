@@ -8,8 +8,9 @@ import { useRouter } from "next/router";
 interface IProps{
     visible: boolean;
     onClose: () => void;
-    onSubmit: (modalData: {description: string, type: TaskType}) => boolean
-    selectedType?: TaskType
+    onSubmit: (modalData: {description: string, type: TaskType}) => void
+    selectedType?: TaskType,
+    success: boolean
 }
 
 const Types = [
@@ -26,7 +27,7 @@ export function capitalizeFirstLetter(string: string) {
 export default function AddModal(props: IProps) {
     const [selected, setSelected] = useState<string>('Typ');
     const [isValid, setValid] = useState<boolean>(false);
-    const [success, setSuccess] = useState<boolean>(false);
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
     const router = useRouter()
 
     const {
@@ -51,13 +52,16 @@ export default function AddModal(props: IProps) {
     },[description, selectedValue]) //eslintreact-hooks/exhaustive-deps
 
     useEffect(() => {
-        if(success){
-            setTimeout(()=>{
-                setSuccess(false)
-                props.onClose()
-            },2000)
+        if(showSuccess && !props.success && isValid){
+          setShowSuccess(false)
+          restartDataWitDelay(100)
+          props.onClose()
         }
-    }, [success])
+        if(props.success && isValid){
+          console.log('test');
+          setShowSuccess(true)
+        }
+    }, [props.success])
 
     const restartDataWitDelay = (delay: number) =>{
       setTimeout(()=>{
@@ -75,7 +79,7 @@ export default function AddModal(props: IProps) {
         open={props.visible}
         onClose={() => {props.onClose(); }}
       >
-        {success ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'#99f0a5', minW:'fit-content', mw:'fit-content'}}>
+        {showSuccess ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'#99f0a5', minW:'fit-content', mw:'fit-content'}}>
           <Card.Body>
             <Text style={{color:'var(--main)', textAlign:'right', opacity:'0.6', paddingInline:'20px', display:'flex', alignItems:'center'}}>Zadanie zostało dodane<Spacer x={1}/> <EmojiHappyIcon height={20} color={'var(--main)'}/></Text>
           </Card.Body>
@@ -126,7 +130,7 @@ export default function AddModal(props: IProps) {
             flat
             css={{background:'$colors$primary', color:'$colors$text'}}
             disabled={!isValid}
-            onClick={()=>{setSuccess(props.onSubmit({description:description, type: selectedValue as any}))}}>
+            onClick={()=>{props.onSubmit({description:description, type: selectedValue as any})}}>
             Dodaj
           </Button>
         </Modal.Footer>

@@ -24,6 +24,10 @@ export const TaskTable = (props: IProps) => {
     if(props.tasks) setTasks(props.tasks)
   },[])
 
+  useEffect(()=>{
+    if(props.tasks.length !== Tasks.length) setTasks(props.tasks)
+  },[props.tasks])
+
   const renderCell = (task: Tasks, columnKey: any) => {
     const cellValue = (task as any)[columnKey];
     switch (columnKey) {
