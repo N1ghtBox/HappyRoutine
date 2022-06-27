@@ -12,7 +12,7 @@ const TaskTable = (props: IProps) => {
     { name: "ACTIONS", uid: "actions" },
   ];
 
-  const renderCell = (task: any, columnKey: any) => {
+  const renderCell = (task: Tasks, columnKey: any) => {
     const cellValue = (task as any)[columnKey];
     
     switch (columnKey) {
