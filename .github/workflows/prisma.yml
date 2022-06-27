@@ -11,8 +11,5 @@ jobs:
 
     steps:
       - name: Run prisma client generate
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 16
-      - run: |
+        run: |
           npx prisma generate
