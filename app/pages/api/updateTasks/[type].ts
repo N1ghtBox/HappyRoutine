@@ -32,5 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.statusMessage = 'Coś poszło nie tak'
         res.end()
     })
-
+    res.status(200)
+    res.end()
 }
