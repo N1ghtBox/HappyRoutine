@@ -1,0 +1,16 @@
+
+name: prisma
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run prisma client generate
+        run: |
+          cd app
+          npx prisma generate
