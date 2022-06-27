@@ -7,7 +7,7 @@ import { Tasks, TaskType } from '@prisma/client'
 import { createClient } from 'pexels'
 import prisma from '../lib/prisma'
 import TaskViewList from '../components/TaskViewList'
-import TaskTable from '../components/TaskTable/TaskTable'
+import { TaskTable } from '../components/TaskTable/TaskTable'
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context)
@@ -41,6 +41,7 @@ const navigation = [
 
 const Home = ({apiKey, tasks}: any) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [type, setType] = useState<TaskType | null>(null);
   const [photo, setPhoto] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [tasksList, setTasksList] = useState<Tasks[]>([]);
@@ -79,6 +80,10 @@ const Home = ({apiKey, tasks}: any) => {
       .then((data)=>setTasksList(data))
   }
 
+  const onSelect = (type: TaskType) =>{
+    setType(type)
+  }
+
   return (
       <Container css={{w:'100%', mw:'100%', mh:'100vh', px:'0'}}>
         <AddModal 
@@ -91,8 +96,10 @@ const Home = ({apiKey, tasks}: any) => {
           openModal={() => setOpenModal(true)}
           session={session}/>
 
-        {/* <TaskViewList TaskList={tasksList} loading={loading}/> */}
-        <TaskTable tasks={tasksList}/>
+        {!type ? 
+          <TaskViewList TaskList={tasksList} loading={loading} onSelect={onSelect}/>:
+          <TaskTable tasks={tasksList.filter(item => item.type === type)} onClose={() => setType(null)}/>}
+        
       </Container>
   );
 }
