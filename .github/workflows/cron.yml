@@ -15,24 +15,24 @@ jobs:
         if: github.event.schedule == '00 1 * * *'
         run: |
           curl --request PUT \
-          --url 'https://happy-routine-n1ghtbox.vercel.app/api/updateTasks/daily' \
+          --url 'https://happy-routine-n1ghtbox.vercel.app/api/Tasks/updateTasks/daily' \
           --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
       - name: Every Monday
         if: github.event.schedule == '00 1 * * 1'
         run: |
           curl --request PUT \
-          --url 'https://happy-routine-n1ghtbox.vercel.app/api/updateTasks/weekly' \
+          --url 'https://happy-routine-n1ghtbox.vercel.app/api/Tasks/updateTasks/weekly' \
           --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
       - name: Every month
         if: github.event.schedule == '00 1 1 * *'
         run: |
           curl --request PUT \
-          --url 'https://happy-routine-n1ghtbox.vercel.app/api/updateTasks/monthly' \
+          --url 'https://happy-routine-n1ghtbox.vercel.app/api/Tasks/updateTasks/monthly' \
           --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
       - name: Every year
         if: github.event.schedule == '00 1 1 1 *'
         run: |
           curl --request PUT \
-          --url 'https://happy-routine-n1ghtbox.vercel.app/api/updateTasks/yearly' \
+          --url 'https://happy-routine-n1ghtbox.vercel.app/api/Tasks/updateTasks/yearly' \
           --header 'Authorization: Bearer ${{ secrets.UPDATE_KEY }}' \
 
