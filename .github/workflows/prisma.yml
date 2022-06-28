@@ -11,5 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run prisma client generate
+        working-directory: ./app
         run: |
               npx prisma generate
