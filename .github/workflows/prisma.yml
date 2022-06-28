@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Run prisma client generate
         run: npx prisma generate
-        working-directory: ./app
+        working-directory: /app
