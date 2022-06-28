@@ -52,13 +52,12 @@ export default function AddModal(props: IProps) {
     },[description, selectedValue]) //eslintreact-hooks/exhaustive-deps
 
     useEffect(() => {
-        if(showSuccess && !props.success && isValid){
+        if(showSuccess && !props.success){
           setShowSuccess(false)
           restartDataWitDelay(100)
           props.onClose()
         }
-        if(props.success && isValid){
-          console.log('test');
+        if(props.success){
           setShowSuccess(true)
         }
     }, [props.success])

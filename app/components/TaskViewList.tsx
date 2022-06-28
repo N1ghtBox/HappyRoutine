@@ -40,7 +40,7 @@ const TaskViewList = (props:IProps) =>{
             {
 
             Object.values(TaskType).map((type, index) => (
-                  getTasksWithType(type).length ? <Grid xs={isSm ?10 : 8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
+                  getTasksWithType(type).length ? <Grid xs={isSm ? 11 : 8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
                     <TaskView color={gradients[index]} type={type} tasks={getTasksWithType(type)}/>
                   </Grid> : null
                   ))

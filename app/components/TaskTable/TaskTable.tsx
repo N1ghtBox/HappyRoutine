@@ -25,15 +25,19 @@ export const TaskTable = (props: IProps) => {
   },[])
 
   useEffect(()=>{
-    if(props.tasks.length !== Tasks.length) setTasks(props.tasks)
-  },[props.tasks])
+    console.log(props.tasks);
+    if(props.tasks && props.forceUpdate){
+      setTasks(props.tasks)
+      props.afterForceUpdate()
+    }
+  },[props.forceUpdate])
 
   const renderCell = (task: Tasks, columnKey: any) => {
     const cellValue = (task as any)[columnKey];
     switch (columnKey) {
       case "status":
         if(task.done) return <StatusBadge type={'done'}><CheckIcon height={20} color={'#99f0a5'}/></StatusBadge>
-        return <StatusBadge type={'notDone'} onClick={()=> console.log(task.id)}><XIcon height={20} color={'#eb2344'}/></StatusBadge>
+        return <StatusBadge type={'notDone'} onClick={()=> props.onComplete(task.id)}><XIcon height={20} color={'#eb2344'}/></StatusBadge>
       case "actions":
         return (
           <Row justify="center" align="center">
@@ -50,7 +54,7 @@ export const TaskTable = (props: IProps) => {
                 </IconButton>
               </Popover.Trigger>
               <Popover.Content>
-                <DeleteTask id={task.id} onDelete={(id: string) => console.log(id)}/>
+                <DeleteTask id={task.id} onDelete={(id: string) => props.onTaskDelete(id)}/>
               </Popover.Content>
             </Popover>
             </Col>
@@ -112,4 +116,8 @@ export const TaskTable = (props: IProps) => {
 interface IProps{
   tasks: Tasks[],
   onClose: () => void,
+  onTaskDelete: (id: string) => void
+  onComplete: (id: string) => void
+  forceUpdate: boolean
+  afterForceUpdate: () => void
 }
