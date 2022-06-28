@@ -11,5 +11,6 @@ jobs:
 
     steps:
       - name: Run prisma client generate
-        run: npx prisma generate
-        working-directory: /app
+        run: |
+            cd app
+            npx prisma generate
