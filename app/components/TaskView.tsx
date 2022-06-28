@@ -23,7 +23,7 @@ export const TaskView = (props: IProps) => {
             <div style={{width:'100%', paddingBlock:'5px', borderBottom:'1px solid var(--lighter-main)', backgroundColor:'var(--darker-main)'}}>
                 <Text
                     h1
-                    size={'2.5rem'}
+                    size={'3vmax'}
                     css={{
                         textGradient: props.color,
                         textAlign:'center'

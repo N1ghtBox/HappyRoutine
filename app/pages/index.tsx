@@ -1,5 +1,5 @@
 import Header from '../components/Header'
-import { getSession, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { Container} from '@nextui-org/react'
 import AddModal from '../components/Modal/AddModal'
 import { useEffect, useState } from 'react'
@@ -8,8 +8,9 @@ import { createClient } from 'pexels'
 import TaskViewList from '../components/TaskViewList'
 import { TaskTable } from '../components/TaskTable/TaskTable'
 import { useRouter } from 'next/router'
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { defaultFetcher } from '../defaultFetcher'
+import { NextPage } from 'next'
 
 const navigation = [
   { name: 'Tablica', href: '#', current: true },
@@ -24,6 +25,7 @@ const Home = () => {
   const [type, setType] = useState<TaskType | undefined>(undefined);
   const [photo, setPhoto] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [success, setSuccess] = useState<boolean>(true);
   const [tasksList, setTasksList] = useState<Tasks[]>([]);
   const router = useRouter()
   const { data: session } = useSession({
@@ -32,59 +34,48 @@ const Home = () => {
         router.replace('/api/auth/signin')
     },
   });
-  const { data, error } = useSWR('/api/getAllTasks', defaultFetcher);
+  const { data, error } = useSWR('/api/Tasks/getAllTasks', defaultFetcher, {revalidateIfStale:true});
 
   useEffect(()=>{
     if(data && session) setTasksList(data)
   },[data])
 
-  const onSubmit = (modalData: {description: string, type: TaskType}): boolean =>{
+  const onSubmit = (modalData: {description: string, type: TaskType}) =>{
     let data:Tasks = {...modalData, userId: (session?.user as any).id, id: '', done:false}
-    fetch('/api/addTask',{
+    fetch('/api/Tasks/addTask', {
       method:'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data)
-    }).then((e)=>fetchNewTasks())
-    .catch(()=>{
-      return false
     })
-    return true
-  }
-
-  const fetchNewTasks = () => {
-    fetch('/api/getAllTasks',{
-      method:'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      }).then((res) => res.json())
-      .then((data)=>setTasksList(data))
-  }
-
-  const onSelect = (type: TaskType) =>{
-    setType(type)
+    .then((e)=>{
+      setSuccess(true)
+      mutate('/api/Tasks/getAllTasks')
+        .then(()=>{
+          setSuccess(false)
+      })
+    })
   }
 
   return (
-      <Container css={{w:'100%', mw:'100%', mh:'100vh', px:'0'}}>
-        <AddModal 
-          visible={openModal} 
-          onClose={()=>setOpenModal(false)}
+    <>
+    <Header
+      navigation={navigation}
+      renderAddButton={true}
+      openModal={() => setOpenModal(true)}
+      session={session} />
+    <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
+        <AddModal
+          visible={openModal}
+          onClose={() => setOpenModal(false)}
           onSubmit={onSubmit}
-          selectedType={type}/>
-        <Header
-          navigation={navigation}
-          renderAddButton={true}
-          openModal={() => setOpenModal(true)}
-          session={session}/>
-
-          {!type ? 
-            <TaskViewList TaskList={tasksList} loading={!!!data} onSelect={onSelect}/>:
-            <TaskTable tasks={tasksList.filter(item => item.type === type)} onClose={() => setType(undefined)}/>
-          }
-      </Container>
+          success={success}
+          selectedType={type} />
+        {!type ?
+          <TaskViewList TaskList={tasksList} loading={!!!data} onSelect={(type: TaskType) => setType(type)} /> :
+          <TaskTable tasks={tasksList.filter(item => item.type === type)} onClose={() => setType(undefined)} />}
+      </div></>
   );
 }
 

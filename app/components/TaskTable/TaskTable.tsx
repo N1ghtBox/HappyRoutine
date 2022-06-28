@@ -24,6 +24,10 @@ export const TaskTable = (props: IProps) => {
     if(props.tasks) setTasks(props.tasks)
   },[])
 
+  useEffect(()=>{
+    if(props.tasks.length !== Tasks.length) setTasks(props.tasks)
+  },[props.tasks])
+
   const renderCell = (task: Tasks, columnKey: any) => {
     const cellValue = (task as any)[columnKey];
     switch (columnKey) {
@@ -46,7 +50,7 @@ export const TaskTable = (props: IProps) => {
                 </IconButton>
               </Popover.Trigger>
               <Popover.Content>
-                <DeleteTask/>
+                <DeleteTask id={task.id} onDelete={(id: string) => console.log(id)}/>
               </Popover.Content>
             </Popover>
             </Col>
@@ -62,6 +66,7 @@ export const TaskTable = (props: IProps) => {
       <IconButton css={{position:'absolute', color:'$colors$primaryGray', mt:'1rem', ml:'$5'}} onClick={()=>props.onClose()}>
         <XIcon height={40}/>
       </IconButton>
+      {Tasks && Tasks.length > 0 ?
         <Table
         aria-label="Task list"
         striped
@@ -99,6 +104,7 @@ export const TaskTable = (props: IProps) => {
           )}
         </Table.Body>
       </Table>
+      :null}
     </>
   );
 }

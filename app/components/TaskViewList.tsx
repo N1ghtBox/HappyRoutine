@@ -2,6 +2,7 @@ import { Grid, Loading, Text } from "@nextui-org/react"
 import { Tasks, TaskType } from "@prisma/client"
 import { TaskView } from "./TaskView"
 import styles from '../styles/Task.module.css'
+import { useMediaQuery } from "../lib/_helpers/_mediaQuery"
 
 
 const TaskViewList = (props:IProps) =>{
@@ -15,8 +16,10 @@ const TaskViewList = (props:IProps) =>{
       "45deg, #b3ffab -20%, #12fff7 100%",
       "45deg, $yellow600 -20%, $red600 100%",
     ]
+    
+    const isSm = useMediaQuery(960);
 
-    return( <Grid.Container gap={6} justify={'center'} alignContent='center' css={{marginInline:'auto', width:'95vw', minHeight:'calc(100vh - 72px)', maxHeight:'fit-content'}} className={styles.scaleUp}>
+    return( <Grid.Container gap={6} justify={'center'} alignContent='center' css={{marginInline:'auto',margin:'0', width:'95vw', minHeight:'calc(95vh - 72px)', maxHeight:'fit-content'}} className={styles.scaleUp}>
           {props.loading ? <Grid xs={1}>
             <Loading color="primary" textColor="primary" size='lg'>
               Ładowanie
@@ -35,6 +38,7 @@ const TaskViewList = (props:IProps) =>{
                       Dodaj pierwsze zadanko, żeby rozpocząć :)
                       </Text></Grid> : null}
             {
+
             Object.values(TaskType).map((type, index) => (
                   getTasksWithType(type).length ? <Grid xs={8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
                   <TaskView color={gradients[index]} type={type} tasks={getTasksWithType(type)}/>

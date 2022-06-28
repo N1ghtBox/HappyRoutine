@@ -1,8 +1,8 @@
 import { signOut } from 'next-auth/react'
-import { Avatar, Button, Card, Container, Grid, Link, Row, Spacer, Text } from '@nextui-org/react'
-import { Image } from "@nextui-org/react";
-import { LogoutIcon, PlusIcon } from '@heroicons/react/outline'
+import { Avatar, Button, Card, Collapse, Container, Grid, Link, Row, Spacer } from '@nextui-org/react'
+import { LogoutIcon, MenuIcon, PlusIcon } from '@heroicons/react/outline'
 import styles from '../styles/Home.module.css'
+import { useMediaQuery } from '../lib/_helpers/_mediaQuery';
 
 interface IProps{
   navigation:{name: string, href:string, current: boolean}[],
@@ -17,27 +17,31 @@ const MockLogo = () => {
   return (
     <Card css={{ h: "$14", $$cardColor: 'transparent', width:'fit-content'}}>
       <Card.Body css={{oy:'hidden', justifyContent:'center', alignItems:'center',p:'0'}} >
-        <Image
+        {/* <Image
           width={70}
           height={70}
           src="https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
           alt="Default Image"
           objectFit="cover"
-        />
+        /> */}
       </Card.Body>
     </Card>
   );
 };
 
 export default function Header(props: IProps) {
+  const isSm = useMediaQuery(960);
+
+  const getButtonStyles = (isSmall: boolean) =>{
+    if(isSmall) return { px:'$4', display:'flex', placeItems:'center', 'span':{mr:'0'}}
+    return {}
+  }
 
   return (
-    <Container fluid css={{mw:'100%', px:'0'}}>
-      <Card css={{ $$cardColor: '$colors$primaryGray', br: 0 }}>
-        <Card.Body>
-          <Row justify="center" align="center">
+    <Container fluid css={{mw:'100%', px:'0', bg:'$colors$primaryGray', py:'$8'}}>
+        <Row justify="center" align="center">
           <Grid.Container gap={2} justify="center">
-            <Grid xs={4} css={{p:'0'}} justify='flex-start' alignItems='center'>
+            {!isSm ? <Grid xs={0} sm={4} css={{p:'0'}} justify='flex-start' alignItems='center'>
               <MockLogo />
               {
                 props.navigation.map(item => (
@@ -49,16 +53,31 @@ export default function Header(props: IProps) {
                   </div>
                 ))
               }
-            </Grid>
-            <Spacer x={2} />
-            <Grid xs={4} css={{p:'0', oy:'hidden' }} justify='flex-end'alignItems='center'>
+            </Grid>:
+            <Grid xs={3} sm={0} css={{p:'0'}} alignItems='center' >
+              <Collapse title={<span></span>}
+                  css={{p:'0', 'div':{p:'0'}}}
+                  showArrow={false}
+                  contentLeft={<MenuIcon height={40} style={{marginInline:'15px',padding:'10px', borderRadius:'5px', outline:'1px solid var(--darker-main)'}}/>}>
+                  <div style={{paddingTop:'15px'}}>
+                  {
+                    props.navigation.map(item => (
+                      <Link css={{color:'$colors$text', ml:'15px', w:'calc(95vw - 15px)', bg: item.current ? Active.backgroundColor : '', p:'$2', br:'10px'}} href={item.href}>
+                        {item.name}
+                      </Link>))
+                  }
+                  </div>
+              </Collapse>
+            </Grid>}
+            {!isSm ? <Spacer x={2} />: null}
+            <Grid xs={9} sm={4} css={{p:'0', oy:'hidden', pr:isSm?'$6': '0' }} justify={'flex-end'} alignItems={!isSm ? 'center':'flex-start'}>
               {props.renderAddButton ? <><Button
                 key={'buttonKey'}
                 auto
-                icon={<PlusIcon height={25}/>}
-                css={{bg:'var(--pink)'}}
+                icon={<PlusIcon height={25} style={{marginRight:'0'}}/>}
+                css={{bg:'var(--pink)', ...getButtonStyles(isSm)}}
                 onPress={()=>props.openModal!()}
-                >Add new</Button>
+                >{isSm?'':'Add new'}</Button>
               <Spacer x={1} key={'spacerKey'}/></> : null}
 
               <Avatar
@@ -76,9 +95,7 @@ export default function Header(props: IProps) {
               />
             </Grid>
           </Grid.Container>
-          </Row>
-        </Card.Body>
-      </Card>
+        </Row>
     </Container>
   )
 }
