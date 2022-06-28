@@ -7,10 +7,12 @@ on:
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest    
+    defaults:
+      run:
+        working-directory: app
 
     steps:
       - name: Run prisma client generate
-        working-directory: app
         run: |
             npx prisma generate
