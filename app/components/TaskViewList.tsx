@@ -17,7 +17,7 @@ const TaskViewList = (props:IProps) =>{
       "45deg, $yellow600 -20%, $red600 100%",
     ]
     
-    const isSm = useMediaQuery(960);
+    const isSm = useMediaQuery(600);
 
     return( <Grid.Container gap={6} justify={'center'} alignContent='center' css={{marginInline:'auto',margin:'0', width:'95vw', minHeight:'calc(95vh - 72px)', maxHeight:'fit-content'}} className={styles.scaleUp}>
           {props.loading ? <Grid xs={1}>
@@ -40,8 +40,8 @@ const TaskViewList = (props:IProps) =>{
             {
 
             Object.values(TaskType).map((type, index) => (
-                  getTasksWithType(type).length ? <Grid xs={8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
-                  <TaskView color={gradients[index]} type={type} tasks={getTasksWithType(type)}/>
+                  getTasksWithType(type).length ? <Grid xs={isSm ?10 : 8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
+                    <TaskView color={gradients[index]} type={type} tasks={getTasksWithType(type)}/>
                   </Grid> : null
                   ))
             }

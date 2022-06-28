@@ -16,7 +16,6 @@ export const TaskView = (props: IProps) => {
 
     const isSm = useMediaQuery(650);
 
-
     const style = {'--clr':getColorOfBall(props.color), '--num':( done / max *100).toString()} as React.CSSProperties;
     return (
         <div className={styles.card} >
@@ -33,7 +32,7 @@ export const TaskView = (props: IProps) => {
                     {capitalizeFirstLetter(props.type)}
                     </Text>
             </div>
-                <div style={{justifyContent: isSm? 'center': 'flex-end',}}>
+                <div style={{justifyContent:'flex-end'}}>
                 <div></div>
                     <div className={styles.percent} style={style}>
                         <div className={styles.dot}></div>
