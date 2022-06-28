@@ -34,7 +34,7 @@ const Home = () => {
         router.replace('/api/auth/signin')
     },
   });
-  const { data, error } = useSWR('/api/getAllTasks', defaultFetcher, {revalidateIfStale:true});
+  const { data, error } = useSWR('/api/Tasks/getAllTasks', defaultFetcher, {revalidateIfStale:true});
 
   useEffect(()=>{
     if(data && session) setTasksList(data)
@@ -42,7 +42,7 @@ const Home = () => {
 
   const onSubmit = (modalData: {description: string, type: TaskType}) =>{
     let data:Tasks = {...modalData, userId: (session?.user as any).id, id: '', done:false}
-    fetch('/api/addTask', {
+    fetch('/api/Tasks/addTask', {
       method:'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const Home = () => {
     })
     .then((e)=>{
       setSuccess(true)
-      mutate('/api/getAllTasks')
+      mutate('/api/Tasks/getAllTasks')
         .then(()=>{
           setSuccess(false)
       })
@@ -59,24 +59,23 @@ const Home = () => {
   }
 
   return (
-      <div style={{width:'100%', minWidth:'100%', minHeight:'100vh', paddingInline:'0'}}>
-        <AddModal 
-          visible={openModal} 
-          onClose={()=>setOpenModal(false)}
+    <>
+    <Header
+      navigation={navigation}
+      renderAddButton={true}
+      openModal={() => setOpenModal(true)}
+      session={session} />
+    <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
+        <AddModal
+          visible={openModal}
+          onClose={() => setOpenModal(false)}
           onSubmit={onSubmit}
           success={success}
-          selectedType={type}/>
-        <Header
-          navigation={navigation}
-          renderAddButton={true}
-          openModal={() => setOpenModal(true)}
-          session={session}/>
-
-          {!type ? 
-            <TaskViewList TaskList={tasksList} loading={!!!data} onSelect={(type:TaskType) => setType(type)}/>:
-            <TaskTable tasks={tasksList.filter(item => item.type === type)} onClose={() => setType(undefined)}/>
-          }
-      </div>
+          selectedType={type} />
+        {!type ?
+          <TaskViewList TaskList={tasksList} loading={!!!data} onSelect={(type: TaskType) => setType(type)} /> :
+          <TaskTable tasks={tasksList.filter(item => item.type === type)} onClose={() => setType(undefined)} />}
+      </div></>
   );
 }
 

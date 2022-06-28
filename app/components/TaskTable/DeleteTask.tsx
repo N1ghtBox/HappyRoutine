@@ -1,11 +1,11 @@
 import React from "react";
 import { Text, Button, Grid, Row } from "@nextui-org/react";
 
-export const DeleteTask = () => {
+export const DeleteTask = (props: IProps) => {
 
   return (
     <Grid.Container
-      css={{ borderRadius: "14px", padding: "1rem 0", maxWidth: "330px" }}
+      css={{ borderRadius: "14px", padding: "1rem 0", maxWidth: "330px", bg:'$colors$primaryGray' }}
     >
       <Row justify="center" align="center">
         <Text b>Confirm</Text>
@@ -17,7 +17,7 @@ export const DeleteTask = () => {
       </Row>
       <Grid.Container justify="center" alignContent="center">
         <Grid>
-          <Button size="sm" shadow color={'error'}>
+          <Button size="sm" shadow color={'error'} onClick={() => props.onDelete(props.id)}>
             Delete
           </Button>
         </Grid>
@@ -25,4 +25,9 @@ export const DeleteTask = () => {
     </Grid.Container>
   );
 };
+
+interface IProps{
+  id: string
+  onDelete: (id: string) => void
+}
 
