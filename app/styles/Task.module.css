@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 1.5vmax;
+    gap: 1vmax;
 }
 .card .percent{
     position: relative;
@@ -110,12 +110,6 @@
     color: #fff;
     font-weight: 700;
     font-size: 3vmax;
-}
-
-.table{
-    -webkit-box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
-    box-shadow: 16px 51px 24px -12px rgba(66, 68, 90, 1);
 }
 .scaleUp{
     animation: scaleUp 0.3s linear forwards;

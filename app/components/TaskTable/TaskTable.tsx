@@ -25,7 +25,6 @@ export const TaskTable = (props: IProps) => {
   },[])
 
   useEffect(()=>{
-    console.log(props.tasks);
     if(props.tasks && props.forceUpdate){
       setTasks(props.tasks)
       props.afterForceUpdate()
@@ -76,7 +75,7 @@ export const TaskTable = (props: IProps) => {
         striped
         css={{
           height: "auto",
-          minWidth: "80%",
+          minWidth:'300px',
           maxWidth:'80%',
           color:'$colors$primaryGray',
           marginInline:'auto',
@@ -84,15 +83,19 @@ export const TaskTable = (props: IProps) => {
         selectionMode="none"
         shadow={false}
         className={styles.scaleUp}
+        containerCss={{
+          minWidth:'0',
+          width:'100%'
+        }}
       >
         <Table.Header columns={columns}>
           {(column) => (
             <Table.Column
-              css={{bg:'$colors$primaryGray', color:'$colors$text'}}
+              css={{bg:'$colors$primaryGray', color:'$colors$text', px:column.uid === "description" ? '$8' : '0', whiteSpace:'normal'}}
               key={column.uid}
               hideHeader={column.uid === "actions"}
               align={column.uid === "actions" ? "center" : "start"}
-              width={column.uid === "actions" || column.uid === "status" ? "10%" : 'auto'}
+              width={column.uid === "actions" || column.uid === "status" ? "10%" : '80%'}
             >
               {column.name}
             </Table.Column>
@@ -102,7 +105,7 @@ export const TaskTable = (props: IProps) => {
           {(item: Tasks) => (
             <Table.Row css={{color:'inherit'}} key={item.id}>
               {(columnKey) => (
-                <Table.Cell>{renderCell(item, columnKey)}</Table.Cell>
+                <Table.Cell css={{px:columnKey === "description" ? '$8' : '0', wordBreak:'word-all', maxWidth:'10%', whiteSpace:'normal'}}>{renderCell(item, columnKey)}</Table.Cell>
               )}
             </Table.Row>
           )}

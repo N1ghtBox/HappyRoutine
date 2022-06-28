@@ -33,7 +33,7 @@ export const TaskView = (props: IProps) => {
                     </Text>
             </div>
                 <div style={{justifyContent:'flex-end'}}>
-                <div></div>
+                    <div></div>
                     <div className={styles.percent} style={style}>
                         <div className={styles.dot}></div>
                         <svg version="1.1" viewBox="0 0 150 150" preserveAspectRatio="xMinYMin meet">
@@ -44,30 +44,38 @@ export const TaskView = (props: IProps) => {
                             <h2>{done} / {max}</h2>
                         </div>
                     </div>
-                    {!isSm ? <>
+                    {!isSm ? 
                         <Table
                         compact
+                        lined
+                        headerLined
+                        shadow={false}
                         aria-label="Example static compact collection table"
                         css={{
                             height: "auto",
-                            minWidth: "80%",
+                            textAlign:'center',
+                            maxWidth:'100%',
+                            p:'0'
                         }}
-                        className={styles.table}
-                    >
+                        containerCss={{width:'80%', overflow:'hidden', maxWidth:'80%'}}>
                         <Table.Header>
-                            <Table.Column>Opis</Table.Column>
+                            <Table.Column css={{textAlign:'center', fontSize:'2vmin'}}>Zadania</Table.Column>
                         </Table.Header>
                         <Table.Body>
                             {
-                                props.tasks.slice(0,2).map(item=>(
-                                    <Table.Row key={item.id}>
-                                        <Table.Cell>{item && item.description.length > 30 ? item.description.slice(0,28) + '...' : item.description}</Table.Cell>
-                                    </Table.Row>
-                                ))
+                                props.tasks.slice(0,3).map((item, index)=>{
+                                    if(index !== 2) return (<Table.Row key={item.id}>
+                                        <Table.Cell css={{maxWidth:'200px'}}>{item && item.description.length > 25 ? item.description.slice(0,21) + '...' : item.description}</Table.Cell>
+                                    </Table.Row>);
+
+                                    return (<Table.Row key={item.id}>
+                                        <Table.Cell>{`... i ${props.tasks.length - 2} więcej`}</Table.Cell>
+                                    </Table.Row>);
+                                })
                             }
                         </Table.Body>
                     </Table>
-                                </> : null}
+                     : null}
                 </div>
         </div>
     )
