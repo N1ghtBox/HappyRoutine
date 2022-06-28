@@ -62,7 +62,7 @@ export default function Header(props: IProps) {
                   <div style={{paddingTop:'15px'}}>
                   {
                     props.navigation.map(item => (
-                      <Link css={{color:'$colors$text', ml:'15px', w:'calc(95vw - 15px)', bg: item.current ? Active.backgroundColor : '', p:'$2', br:'10px'}} href={item.href}>
+                      <Link css={{color:'$colors$text', ml:'15px', w:'calc(95vw - 15px)', bg: item.current ? Active.backgroundColor : '', p:'$2', br:'10px'}} href={item.href} key={item.name}>
                         {item.name}
                       </Link>))
                   }
