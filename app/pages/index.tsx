@@ -57,6 +57,7 @@ const Home = () => {
 
 
   const onSubmit = (modalData: {description: string, type: TaskType}) =>{
+    setAsyncActionInProgress(true)
     let data:Tasks = {...modalData, userId: (session?.user as any).id, id: '', done:false}
     fetch('/api/Tasks/addTask', {
       method:'POST',
@@ -66,6 +67,7 @@ const Home = () => {
       body: JSON.stringify(data)
     })
     .then(()=>{
+      setAsyncActionInProgress(false)
       setSuccess(true)
       mutate('/api/Tasks/getAllTasks')
         .then(()=>{
@@ -99,6 +101,7 @@ const Home = () => {
     </Card>: null}
     <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
         <AddModal
+          asyncAction={asyncActionInProgress}
           visible={openModal}
           onClose={() => setOpenModal(false)}
           onSubmit={onSubmit}

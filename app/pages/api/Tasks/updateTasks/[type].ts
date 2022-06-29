@@ -5,11 +5,13 @@ import prisma from "../../../../lib/prisma";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method !== 'PUT') {
         res.status(405)
+        res.end()
         return
 
     }
     if(req.headers.authorization && req.headers.authorization !== process.env.UPDATE_KEY){
         res.status(401)
+        res.end()
         return
 
     }
@@ -18,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(!Object.keys(TaskType).includes(type)){
         res.status(400)
         res.statusMessage = 'Podany typ nie znajduje się w dozwolonych typach'
+        res.end()
         return
 
     }
@@ -32,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .catch((e)=>{
         res.status(400)
         res.statusMessage = 'Coś poszło nie tak'
+        res.end()
         return
 
     })
@@ -40,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     prisma.$disconnect()
     res.status(200)
+    res.end()
     return
 
 }

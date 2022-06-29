@@ -1,4 +1,4 @@
-import { Modal, Button, Text, Input, Dropdown, useInput, Card, Spacer } from "@nextui-org/react";
+import { Modal, Button, Text, Input, Dropdown, useInput, Card, Spacer, Loading } from "@nextui-org/react";
 import { BookmarkIcon } from '@heroicons/react/outline'
 import { EmojiHappyIcon } from '@heroicons/react/solid'
 import { TaskType } from "@prisma/client";
@@ -11,6 +11,7 @@ interface IProps{
     onSubmit: (modalData: {description: string, type: TaskType}) => void
     selectedType?: TaskType,
     success: boolean
+    asyncAction: boolean
 }
 
 const Types = [
@@ -78,11 +79,17 @@ export default function AddModal(props: IProps) {
         open={props.visible}
         onClose={() => {props.onClose(); }}
       >
-        {showSuccess ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'#99f0a5', minW:'fit-content', mw:'fit-content'}}>
-          <Card.Body>
-            <Text style={{color:'var(--main)', textAlign:'right', opacity:'0.6', paddingInline:'20px', display:'flex', alignItems:'center'}}>Zadanie zostało dodane<Spacer x={1}/> <EmojiHappyIcon height={20} color={'var(--main)'}/></Text>
-          </Card.Body>
-        </Card> : null}
+        {showSuccess ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'$colors$success', minW:'fit-content', mw:'fit-content'}}>
+            <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
+              <Text style={{color:'var(--main)', textAlign:'right', opacity:'0.6', paddingInline:'10px', display:'flex', alignItems:'center'}}>Zadanie zostało dodane<Spacer x={1}/> <EmojiHappyIcon height={20} color={'var(--main)'}/></Text>
+            </Card.Body>
+          </Card> : null}
+        {props.asyncAction ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'var(--main)', minW:'fit-content', mw:'fit-content'}}>
+            <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
+              <Loading color="primary" textColor="primary" size='sm' />
+              <Text css={{pl:'$4'}}>Dodawanie</Text>
+            </Card.Body>
+          </Card> : null}
         <Modal.Header>
           <Text id="modal-title" size={18}>
             Dodaj
