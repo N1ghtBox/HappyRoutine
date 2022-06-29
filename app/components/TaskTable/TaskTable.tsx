@@ -105,7 +105,7 @@ export const TaskTable = (props: IProps) => {
           {(item: Tasks) => (
             <Table.Row css={{color:'inherit'}} key={item.id}>
               {(columnKey) => (
-                <Table.Cell css={{px:columnKey === "description" ? '$8' : '0', wordBreak:'word-all', maxWidth:'10%', whiteSpace:'normal'}}>{renderCell(item, columnKey)}</Table.Cell>
+                <Table.Cell css={{px:columnKey === "description" ? '$8' : '0', wordBreak:'break-word', maxWidth:'100%', whiteSpace:'normal'}}>{renderCell(item, columnKey)}</Table.Cell>
               )}
             </Table.Row>
           )}
