@@ -1,5 +1,5 @@
 import { signOut } from 'next-auth/react'
-import { Avatar, Button, Card, Collapse, Container, Grid, Link, Row, Spacer } from '@nextui-org/react'
+import { Avatar, Button, Card, Collapse, Container, Grid, Link, Row, Spacer, Image } from '@nextui-org/react'
 import { LogoutIcon, MenuIcon, PlusIcon } from '@heroicons/react/outline'
 import styles from '../styles/Home.module.css'
 import { useMediaQuery } from '../lib/_helpers/_mediaQuery';
@@ -13,24 +13,22 @@ interface IProps{
 
 const Active = {backgroundColor:'$colors$primaryLightHover'}
 
-const MockLogo = () => {
+const Logo = () => {
   return (
-    <Card css={{ h: "$14", $$cardColor: 'transparent', width:'fit-content'}}>
-      <Card.Body css={{oy:'hidden', justifyContent:'center', alignItems:'center',p:'0'}} >
-        {/* <Image
-          width={70}
-          height={70}
-          src="https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
-          alt="Default Image"
-          objectFit="cover"
-        /> */}
-      </Card.Body>
-    </Card>
+      <Card css={{ $$cardColor: 'transparent', width:'fit-content'}}>
+        <Card.Body css={{ justifyContent:'center', alignItems:'center',p:'0'}} >
+          <Image
+              height={60}
+              src={'/Full-logo-white.png'}
+              css={{minWidth:'120px'}}/>
+        </Card.Body>
+      </Card>
   );
 };
 
 export default function Header(props: IProps) {
   const isSm = useMediaQuery(960);
+  const shouldLogoBeVisible = useMediaQuery(400);
 
   const getButtonStyles = (isSmall: boolean) =>{
     if(isSmall) return { px:'$4', display:'flex', placeItems:'center', 'span':{mr:'0'}}
@@ -41,12 +39,11 @@ export default function Header(props: IProps) {
     <Container fluid css={{mw:'100%', px:'0', bg:'$colors$primaryGray', py:'$8'}}>
         <Row justify="center" align="center">
           <Grid.Container gap={2} justify="center">
-            {!isSm ? <Grid xs={0} sm={4} css={{p:'0'}} justify='flex-start' alignItems='center'>
-              <MockLogo />
+            {!isSm ? <Grid xs={0} sm={5} md={4} css={{p:'0', gap:'15px'}} justify='flex-start' alignItems='center'>
+              <Logo />
               {
                 props.navigation.map(item => (
                   <div style={{height:'fit-content', display:'flex'}} key={`${item.name} ${item.href}`}>
-                    <Spacer x={2}/>
                     <Link href={item.href} css={item.current ? Active : {}}  className={styles.link}>
                       {item.name}
                     </Link>
@@ -69,8 +66,15 @@ export default function Header(props: IProps) {
                   </div>
               </Collapse>
             </Grid>}
-            {!isSm ? <Spacer x={2} />: null}
-            <Grid xs={9} sm={4} css={{p:'0', oy:'hidden', pr:isSm?'$6': '0' }} justify={'flex-end'} alignItems={!isSm ? 'center':'flex-start'}>
+            {!isSm ? <Spacer x={2} />: !shouldLogoBeVisible ?
+              <Image
+                height={50}
+                src={'/120p-logo.png'}
+                css={{minWidth:'120px'}}
+                containerCss={{top:'18px !important'}}
+                className='center'/>: null
+            }
+            <Grid xs={9} sm={3} md={4} css={{p:'0', oy:'hidden', pr:isSm?'$6': '0' }} justify={'flex-end'} alignItems={!isSm ? 'center':'flex-start'}>
               {props.renderAddButton ? <><Button
                 key={'buttonKey'}
                 auto

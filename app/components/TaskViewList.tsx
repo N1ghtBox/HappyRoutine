@@ -20,7 +20,7 @@ const TaskViewList = (props:IProps) =>{
     const isSm = useMediaQuery(600);
 
     return( <Grid.Container gap={6} justify={'center'} alignContent='center' css={{marginInline:'auto',margin:'0', width:'95vw', minHeight:'calc(95vh - 72px)', maxHeight:'fit-content'}} className={styles.scaleUp}>
-          {props.loading ? <Grid xs={1}>
+          {props.loading ? <Grid xs={4} className='center'>
             <Loading color="primary" textColor="primary" size='lg'>
               Ładowanie
             </Loading>
@@ -38,7 +38,6 @@ const TaskViewList = (props:IProps) =>{
                       Dodaj pierwsze zadanko, żeby rozpocząć :)
                       </Text></Grid> : null}
             {
-
             Object.values(TaskType).map((type, index) => (
                   getTasksWithType(type).length ? <Grid xs={isSm ? 11 : 8} sm={5} lg={3} justify='center' onClick={() => props.onSelect(type)} key={index}>
                     <TaskView color={gradients[index]} type={type} tasks={getTasksWithType(type)}/>
