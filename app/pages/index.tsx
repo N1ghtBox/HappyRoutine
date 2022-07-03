@@ -133,7 +133,7 @@ const Home = ({apiKey}: any) => {
         <AddModal
           asyncAction={asyncActionInProgress}
           visible={openModal}
-          onClose={() => setOpenModal(false)}
+          onClose={() => {setOpenModal(false); setEditTask(undefined)}}
           onSubmit={onSubmit}
           success={success}
           editEntity={editTask}

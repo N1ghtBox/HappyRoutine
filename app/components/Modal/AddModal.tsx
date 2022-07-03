@@ -105,7 +105,7 @@ export default function AddModal(props: IProps) {
           </Card> : null}
         <Modal.Header>
           <Text id="modal-title" size={18}>
-            Dodaj
+            {editMode ? 'Edytuj' : 'Dodaj'}
             <Text b size={18} css={{pl:'$3', color:'$colors$primary'}}>
                 Zadanie
             </Text>
@@ -150,7 +150,7 @@ export default function AddModal(props: IProps) {
             css={{background:'$colors$primary', color:'$colors$text'}}
             disabled={!isValid}
             onClick={()=>{props.onSubmit({description:description, type: selectedValue as any,id: editId},editMode)}}>
-            Dodaj
+            {editMode ? 'Edytuj' : 'Dodaj'}
           </Button>
         </Modal.Footer>
       </Modal>
