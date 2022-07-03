@@ -16,6 +16,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     }
     let { type } = req.query
+    if(!type){
+        res.status(400)
+        res.statusMessage = 'Podany typ nie znajduje się w dozwolonych typach'
+        res.end()
+        return
+    }
     if(Array.isArray(type)) type = type.join('')
     if(!Object.keys(TaskType).includes(type)){
         res.status(400)

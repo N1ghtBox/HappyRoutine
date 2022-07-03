@@ -39,9 +39,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return
     }
 
+
+
+    let user = await prisma.user.findFirst(getBodyForRequest(task.type, task.userId))
+
+    let completedTasks = !user ? await prisma.tasks.count({
+        where:{
+            userId:task.userId,
+            done: true,
+            type: task.type
+        }
+    }) : -1
+
     prisma.$disconnect()
-    res.status(200)
+    res.status(200).send(JSON.stringify({completedTasks:completedTasks}))
     res.end()
     return
+}
 
+function getBodyForRequest(type: string, id: string):any{
+    if(type === 'daily') return {where:{doneDaily: true, id:id}}
+    if(type === 'weekly') return {where:{doneWeekly: true, id:id}}
+    if(type === 'monthly') return {where:{doneMonthly: true, id:id}}
+    return {where:{doneYearly: true, id:id}}
 }

@@ -1,17 +1,17 @@
 import { Modal, Button, Text, Input, Dropdown, useInput, Card, Spacer, Loading } from "@nextui-org/react";
 import { BookmarkIcon } from '@heroicons/react/outline'
 import { EmojiHappyIcon } from '@heroicons/react/solid'
-import { TaskType } from "@prisma/client";
+import { Tasks, TaskType } from "@prisma/client";
 import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
 
 interface IProps{
     visible: boolean;
     onClose: () => void;
-    onSubmit: (modalData: {description: string, type: TaskType}) => void
+    onSubmit: (modalData: {description: string, type: TaskType, id?: string}, update:boolean) => void
     selectedType?: TaskType,
     success: boolean
     asyncAction: boolean
+    editEntity?: Tasks
 }
 
 const Types = [
@@ -29,7 +29,8 @@ export default function AddModal(props: IProps) {
     const [selected, setSelected] = useState<string>('Typ');
     const [isValid, setValid] = useState<boolean>(false);
     const [showSuccess, setShowSuccess] = useState<boolean>(false);
-    const router = useRouter()
+    const [editMode, setEditMode] = useState<boolean>(false);
+    const [editId, setEditId] = useState<string>('');
 
     const {
         value: description,
@@ -67,8 +68,20 @@ export default function AddModal(props: IProps) {
       setTimeout(()=>{
         setSelected('Typ')
         setDescription('')
+        setEditId('')
+        setEditMode(false)
       }, delay)
     }
+
+    useEffect(() => {
+      if(props.editEntity){
+        setDescription(props.editEntity.description)
+        setSelected(props.editEntity.type)
+        setEditId(props.editEntity.id)
+        setEditMode(true)
+      }
+    }, [props.editEntity])
+    
 
   return (
     <div>
@@ -81,13 +94,13 @@ export default function AddModal(props: IProps) {
       >
         {showSuccess ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'$colors$success', minW:'fit-content', mw:'fit-content'}}>
             <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
-              <Text style={{color:'var(--main)', textAlign:'right', opacity:'0.6', paddingInline:'10px', display:'flex', alignItems:'center'}}>Zadanie zostało dodane<Spacer x={1}/> <EmojiHappyIcon height={20} color={'var(--main)'}/></Text>
+              <Text style={{color:'var(--main)', textAlign:'right', opacity:'0.6', paddingInline:'10px', display:'flex', alignItems:'center'}}>{editMode ? 'Zadanie zostało zaktualizowane' :'Zadanie zostało dodane'}<Spacer x={1}/> <EmojiHappyIcon height={20} color={'var(--main)'}/></Text>
             </Card.Body>
           </Card> : null}
         {props.asyncAction ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'var(--main)', minW:'fit-content', mw:'fit-content'}}>
             <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
               <Loading color="primary" textColor="primary" size='sm' />
-              <Text css={{pl:'$4'}}>Dodawanie</Text>
+              <Text css={{pl:'$4'}}>{editMode ? 'Aktualizowanie' :'Dodawanie'}</Text>
             </Card.Body>
           </Card> : null}
         <Modal.Header>
@@ -136,7 +149,7 @@ export default function AddModal(props: IProps) {
             flat
             css={{background:'$colors$primary', color:'$colors$text'}}
             disabled={!isValid}
-            onClick={()=>{props.onSubmit({description:description, type: selectedValue as any})}}>
+            onClick={()=>{props.onSubmit({description:description, type: selectedValue as any,id: editId},editMode)}}>
             Dodaj
           </Button>
         </Modal.Footer>
