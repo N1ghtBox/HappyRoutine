@@ -2,7 +2,7 @@ import { Table, Row, Col, Popover } from "@nextui-org/react";
 import { TrashIcon, PencilAltIcon, XIcon, CheckIcon } from '@heroicons/react/outline'
 import { IconButton } from "./IconButton";
 import { StatusBadge } from "./StatusBadge";
-import { Tasks, TaskType } from "@prisma/client";
+import { Tasks } from "@prisma/client";
 import { DeleteTask } from "./DeleteTask";
 import { useEffect, useState } from "react";
 import styles from '../../styles/Task.module.css'
@@ -26,6 +26,7 @@ export const TaskTable = (props: IProps) => {
 
   useEffect(()=>{
     if(props.tasks && props.forceUpdate){
+      if(props.tasks.length <= 0) return props.onClose()
       setTasks(props.tasks)
       props.afterForceUpdate()
     }
@@ -36,12 +37,12 @@ export const TaskTable = (props: IProps) => {
     switch (columnKey) {
       case "status":
         if(task.done) return <StatusBadge type={'done'}><CheckIcon height={20} color={'#99f0a5'}/></StatusBadge>
-        return <StatusBadge type={'notDone'} onClick={()=> props.onComplete(task.id)}><XIcon height={20} color={'#eb2344'}/></StatusBadge>
+        return <StatusBadge type={'notDone'} onClick={()=> props.onComplete(task)}><XIcon height={20} color={'#eb2344'}/></StatusBadge>
       case "actions":
         return (
           <Row justify="center" align="center">
             <Col css={{ d: "flex" }}>
-                <IconButton onClick={() => console.log("Edit user", task.id)}>
+                <IconButton onClick={() => props.onEdit(task)}>
                   <PencilAltIcon height={20} fill="#979797" />
                 </IconButton>
             </Col>
@@ -120,7 +121,8 @@ interface IProps{
   tasks: Tasks[],
   onClose: () => void,
   onTaskDelete: (id: string) => void
-  onComplete: (id: string) => void
+  onComplete: (task: Tasks) => void
   forceUpdate: boolean
   afterForceUpdate: () => void
+  onEdit: (task: Tasks) => void
 }
