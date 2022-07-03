@@ -81,7 +81,7 @@ export default function Header(props: IProps) {
                 icon={<PlusIcon height={25} style={{marginRight:'0'}}/>}
                 css={{bg:'var(--pink)', ...getButtonStyles(isSm)}}
                 onPress={()=>props.openModal!()}
-                >{isSm?'':'Add new'}</Button>
+                >{isSm?'':'Dodaj nowe'}</Button>
               <Spacer x={1} key={'spacerKey'}/></> : null}
 
               <Avatar
