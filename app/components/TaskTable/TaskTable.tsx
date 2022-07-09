@@ -96,7 +96,7 @@ export const TaskTable = (props: IProps) => {
               key={column.uid}
               hideHeader={column.uid === "actions"}
               align={column.uid === "actions" ? "center" : "start"}
-              width={column.uid === "actions" || column.uid === "status" ? "10%" : '80%'}
+              width={column.uid !== "description" ? "10%" : '80%'}
             >
               {column.name}
             </Table.Column>

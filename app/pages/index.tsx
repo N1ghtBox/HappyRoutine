@@ -34,6 +34,7 @@ const Home = ({apiKey}: any) => {
   const [type, setType] = useState<TaskType | undefined>(undefined);
   const [asyncActionInProgress, setAsyncActionInProgress] = useState<boolean>(false);
   const [asyncActionText, setAsyncActionText] = useState<string>('');
+  const [asyncActionType, setAsyncActionType] = useState<'main' | 'success' | 'error'>('main');
   const [success, setSuccess] = useState<boolean>(false);
   const [completedType, setCompletedType] = useState<TaskType | undefined>(undefined);
   const [tasksList, setTasksList] = useState<Tasks[]>([]);
@@ -59,9 +60,12 @@ const Home = ({apiKey}: any) => {
   const onDelete = (id: string) =>{
     setAsyncActionInProgress(true)
     setAsyncActionText('Usuwanie zadania...')
+    setAsyncActionType('main')
     fetch(`/api/Tasks/deleteTask/${id}`, {
       method:'DELETE',
     }).then(()=>{
+      setAsyncActionType('success')
+      setAsyncActionText('Zadanie zostało usunięte')
       mutate('/api/Tasks/getAllTasks').then(()=>setAsyncActionInProgress(false))
     })
   }
@@ -103,14 +107,19 @@ const Home = ({apiKey}: any) => {
     let allTaskOfType = tasksList.filter(item => item.type === task.type)
     setAsyncActionInProgress(true)
     setAsyncActionText('Zmiana statusu zadania...')
+    setAsyncActionType('main')
     fetch(`/api/Tasks/completeTask/${task.id}`, {method:'PUT'})
       .then(res=> res.json())
       .then(data => {
-        mutate('/api/Tasks/getAllTasks')
-        setAsyncActionInProgress(false)
+        setAsyncActionType('success')
+        setAsyncActionText('Zadanie zostało ukończone')
+        mutate('/api/Tasks/getAllTasks').then(()=> setAsyncActionInProgress(false))
         if(allTaskOfType.length === data.completedTasks){
+          setAsyncActionInProgress(true)
+          setAsyncActionType('main')
+          setAsyncActionText('Ładowanie zdjęcia...')
           setCompletedType(task.type)
-          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'})
+          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'}).then(()=>setAsyncActionInProgress(false))
         }
       })
   }
@@ -122,14 +131,14 @@ const Home = ({apiKey}: any) => {
       renderAddButton={true}
       openModal={() => setOpenModal(true)}
       session={session} />
-      {asyncActionInProgress ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:'var(--main)', minW:'fit-content', mw:'fit-content'}}>
+      {asyncActionInProgress ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:`var(--${asyncActionType}})`, minW:'fit-content', mw:'fit-content'}}>
           <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
             <Loading color="primary" textColor="primary" size='sm' />
             <Text css={{pl:'$4'}}>{asyncActionText}</Text>
           </Card.Body>
     </Card>: null}
     <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
-        <PhotoModal type={completedType} onClose={() => setCompletedType(undefined)} photo={photo}/>
+        <PhotoModal type={completedType} onClose={() => {setCompletedType(undefined); setPhoto(undefined)}} photo={photo}/>
         <AddModal
           asyncAction={asyncActionInProgress}
           visible={openModal}
