@@ -1,6 +1,7 @@
 import { Button, Card, Col, Modal, Row, Text, Link } from "@nextui-org/react";
 import { TaskType } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "../../lib/_helpers/_mediaQuery";
 
 interface IProps{
     onClose: () => void,
@@ -10,6 +11,8 @@ interface IProps{
 
 export default function PhotoModal(props: IProps) {
     const [photo, setPhoto] = useState<any>();
+    const isSm = useMediaQuery(650);
+    const isMd = useMediaQuery(1000);
 
     useEffect(()=>{
         if(props.photo && !photo){
@@ -26,21 +29,23 @@ export default function PhotoModal(props: IProps) {
     return(
         <Modal
             closeButton
+            width={isSm? '90%' :isMd ? '60%' : '40%'}
             aria-labelledby="modal-title"
             open={!!props.type && !!photo}
             onClose={() => props.onClose()}
-            css={{pt:'0px', maxWidth:'40vw'}}
+            css={{pt:'0px', maxH:'80vh'}}
             className={'roundedButton'}
+            
         >
         <Card css={{ w: "100%"}}>
             <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
             <Col>
-                <Text size={16} weight="bold" transform="uppercase" color="#ffffff" css={{textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black", letterSpacing:'4px'}} >
+                <Text weight="bold" transform="uppercase" color="#ffffff" css={{textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black", letterSpacing:'4px'}} >
                 Congratulations
                 </Text>
-                <Text h2 color="black" css={{textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white"}}>
+                {!(!isSm && isMd) ? <Text h2 color="black" css={{textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white"}}>
                 {`You have finished your ${props.type ? props.type : ''} tasks`}
-                </Text>
+                </Text> : null}
             </Col>
             </Card.Header>
             <Card.Body css={{ p: 0 }}>

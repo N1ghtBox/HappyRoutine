@@ -7,6 +7,8 @@
     --lighter-gray: #F2F5EA;
     --gray: #D6DBD2;
     --green: #BBC7A4;
+    --error:#eb2344;
+    --success:#99f0a5;
 }
 
 html,
