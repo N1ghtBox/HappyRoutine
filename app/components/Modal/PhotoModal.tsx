@@ -1,12 +1,14 @@
 import { Button, Card, Col, Modal, Row, Text, Link } from "@nextui-org/react";
 import { TaskType } from "@prisma/client";
 import { useEffect, useState } from "react";
+import asyncActionDto from "../../asyncActionDto";
 import { useMediaQuery } from "../../lib/_helpers/_mediaQuery";
 
 interface IProps{
     onClose: () => void,
     type: TaskType | undefined
     photo: any,
+    onLoadingPhoto: (dto: asyncActionDto) => void
 }
 
 export default function PhotoModal(props: IProps) {
@@ -16,11 +18,13 @@ export default function PhotoModal(props: IProps) {
 
     useEffect(()=>{
         if(props.photo && !photo){
+            props.onLoadingPhoto({show:true, message:'Loading photo...', type:'main'})
             fetch(props.photo.src.original)
             .then(res => res.blob())
             .then( blob =>{
                 let response = URL.createObjectURL(blob)
                 setPhoto(response)
+                props.onLoadingPhoto({show:false, message:'', type:'main'})
             })
         }
 

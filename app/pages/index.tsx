@@ -11,10 +11,11 @@ import useSWR, { mutate } from 'swr';
 import { defaultFetcher } from '../defaultFetcher'
 import { Card, Loading, Text } from '@nextui-org/react'
 import PhotoModal from '../components/Modal/PhotoModal'
+import asyncActionDto from '../asyncActionDto'
 
 const navigation = [
   { name: 'Tablica', href: '#', current: true },
-  { name: 'Strefa', href: 'strefa', current: false },
+  { name: 'Kalendarz', href: 'kalendarz', current: false },
   { name: 'O mnie', href: '#', current: false },
 ]
 
@@ -27,14 +28,12 @@ export async function getServerSideProps() {
   }
 }
 
-const Home = ({apiKey}: any) => {
+export default function Home({apiKey}: any) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>();
   const [forceUpdate, setForceUpdate] = useState<boolean>(false);
   const [type, setType] = useState<TaskType | undefined>(undefined);
-  const [asyncActionInProgress, setAsyncActionInProgress] = useState<boolean>(false);
-  const [asyncActionText, setAsyncActionText] = useState<string>('');
-  const [asyncActionType, setAsyncActionType] = useState<'main' | 'success' | 'error'>('main');
+  const [asyncAction, setAsyncAction] = useState<asyncActionDto>({show:false, message:'', type:'main'});
   const [success, setSuccess] = useState<boolean>(false);
   const [completedType, setCompletedType] = useState<TaskType | undefined>(undefined);
   const [tasksList, setTasksList] = useState<Tasks[]>([]);
@@ -58,15 +57,12 @@ const Home = ({apiKey}: any) => {
   },[data])
 
   const onDelete = (id: string) =>{
-    setAsyncActionInProgress(true)
-    setAsyncActionText('Usuwanie zadania...')
-    setAsyncActionType('main')
+    setAsyncAction({show:true, message:'Usuwanie zadania...', type:'main'})
     fetch(`/api/Tasks/deleteTask/${id}`, {
       method:'DELETE',
     }).then(()=>{
-      setAsyncActionType('success')
-      setAsyncActionText('Zadanie zostało usunięte')
-      mutate('/api/Tasks/getAllTasks').then(()=>setAsyncActionInProgress(false))
+      setAsyncAction({...asyncAction, message:'Zadanie zostało usunięte', type:'success'})
+      mutate('/api/Tasks/getAllTasks').then(()=>setAsyncAction({...asyncAction, show:false}))
     })
   }
 
@@ -84,7 +80,7 @@ const Home = ({apiKey}: any) => {
   },[completedType])
 
   const onSubmit = (modalData: {id?: string, description: string, type: TaskType}, update: boolean) =>{
-    setAsyncActionInProgress(true)
+    setAsyncAction({...asyncAction, show:true})
     let data:Tasks = {...modalData, userId: (session?.user as any).id, id: modalData.id ? modalData.id :'', done:false}
     fetch(update ?'/api/Tasks/updateTask' :'/api/Tasks/addTask', {
       method:update ? 'PUT' : 'POST',
@@ -94,7 +90,7 @@ const Home = ({apiKey}: any) => {
       body: JSON.stringify(data)
     })
     .then(()=>{
-      setAsyncActionInProgress(false)
+      setAsyncAction({...asyncAction, show:false})
       setSuccess(true)
       mutate('/api/Tasks/getAllTasks')
         .then(()=>{
@@ -105,21 +101,15 @@ const Home = ({apiKey}: any) => {
 
   const onComplete = (task: Tasks) => {
     let allTaskOfType = tasksList.filter(item => item.type === task.type)
-    setAsyncActionInProgress(true)
-    setAsyncActionText('Zmiana statusu zadania...')
-    setAsyncActionType('main')
+    setAsyncAction({show:true, type:'main', message:'Zmiana statusu zadania...'})
     fetch(`/api/Tasks/completeTask/${task.id}`, {method:'PUT'})
       .then(res=> res.json())
       .then(data => {
-        setAsyncActionType('success')
-        setAsyncActionText('Zadanie zostało ukończone')
-        mutate('/api/Tasks/getAllTasks').then(()=> setAsyncActionInProgress(false))
+      setAsyncAction({...asyncAction, type:'success', message:'Zadanie zostało ukończone'})
+        mutate('/api/Tasks/getAllTasks').then(()=> setAsyncAction({...asyncAction, show:false}))
         if(allTaskOfType.length === data.completedTasks){
-          setAsyncActionInProgress(true)
-          setAsyncActionType('main')
-          setAsyncActionText('Ładowanie zdjęcia...')
           setCompletedType(task.type)
-          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'}).then(()=>setAsyncActionInProgress(false))
+          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'})
         }
       })
   }
@@ -131,16 +121,21 @@ const Home = ({apiKey}: any) => {
       renderAddButton={true}
       openModal={() => setOpenModal(true)}
       session={session} />
-      {asyncActionInProgress ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:`var(--${asyncActionType}})`, minW:'fit-content', mw:'fit-content'}}>
+      {asyncAction.show ? <Card css={{position:'fixed', bottom:'$4', right:'$4',bg:`var(--${asyncAction.type})`, w:'30%', minW:'fit-content', mw:'fit-content'}}>
           <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
-            <Loading color="primary" textColor="primary" size='sm' />
-            <Text css={{pl:'$4'}}>{asyncActionText}</Text>
+            {asyncAction.type === 'main' ? <Loading color="primary" textColor="primary" size='sm' /> : null}
+            <Text css={{pl:'$4'}} color={asyncAction.type === 'main' ? 'var(--gray)' : 'var(--main)'}>{asyncAction.message}</Text>
           </Card.Body>
     </Card>: null}
     <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
-        <PhotoModal type={completedType} onClose={() => {setCompletedType(undefined); setPhoto(undefined)}} photo={photo}/>
+        <PhotoModal 
+          type={completedType} 
+          onClose={() => {setCompletedType(undefined); setPhoto(undefined)}} 
+          photo={photo}
+          onLoadingPhoto={(dto:asyncActionDto) => setAsyncAction(dto)}
+          />
         <AddModal
-          asyncAction={asyncActionInProgress}
+          asyncAction={asyncAction.show}
           visible={openModal}
           onClose={() => {setOpenModal(false); setEditTask(undefined)}}
           onSubmit={onSubmit}
@@ -169,4 +164,3 @@ const Home = ({apiKey}: any) => {
 
 Home.auth = true
 
-export default Home
