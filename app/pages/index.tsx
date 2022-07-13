@@ -28,7 +28,7 @@ export async function getServerSideProps() {
   }
 }
 
-export default function Home({apiKey}: any) {
+const Home = ({apiKey}: any) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>();
   const [forceUpdate, setForceUpdate] = useState<boolean>(false);
@@ -164,3 +164,4 @@ export default function Home({apiKey}: any) {
 
 Home.auth = true
 
+export default Home;
