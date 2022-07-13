@@ -11,11 +11,10 @@ import useSWR, { mutate } from 'swr';
 import { defaultFetcher } from '../defaultFetcher'
 import { Card, Loading, Text } from '@nextui-org/react'
 import PhotoModal from '../components/Modal/PhotoModal'
-import asyncActionDto from '../asyncActionDto'
 
 const navigation = [
   { name: 'Tablica', href: '#', current: true },
-  { name: 'Kalendarz', href: 'kalendarz', current: false },
+  { name: 'Strefa', href: 'strefa', current: false },
   { name: 'O mnie', href: '#', current: false },
 ]
 
@@ -28,12 +27,14 @@ export async function getServerSideProps() {
   }
 }
 
-export default function Home({apiKey}: any) {
+const Home = ({apiKey}: any) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [photo, setPhoto] = useState<any>();
   const [forceUpdate, setForceUpdate] = useState<boolean>(false);
   const [type, setType] = useState<TaskType | undefined>(undefined);
-  const [asyncAction, setAsyncAction] = useState<asyncActionDto>({show:false, message:'', type:'main'});
+  const [asyncActionInProgress, setAsyncActionInProgress] = useState<boolean>(false);
+  const [asyncActionText, setAsyncActionText] = useState<string>('');
+  const [asyncActionType, setAsyncActionType] = useState<'main' | 'success' | 'error'>('main');
   const [success, setSuccess] = useState<boolean>(false);
   const [completedType, setCompletedType] = useState<TaskType | undefined>(undefined);
   const [tasksList, setTasksList] = useState<Tasks[]>([]);
@@ -57,12 +58,15 @@ export default function Home({apiKey}: any) {
   },[data])
 
   const onDelete = (id: string) =>{
-    setAsyncAction({show:true, message:'Usuwanie zadania...', type:'main'})
+    setAsyncActionInProgress(true)
+    setAsyncActionText('Usuwanie zadania...')
+    setAsyncActionType('main')
     fetch(`/api/Tasks/deleteTask/${id}`, {
       method:'DELETE',
     }).then(()=>{
-      setAsyncAction({...asyncAction, message:'Zadanie zostało usunięte', type:'success'})
-      mutate('/api/Tasks/getAllTasks').then(()=>setAsyncAction({...asyncAction, show:false}))
+      setAsyncActionType('success')
+      setAsyncActionText('Zadanie zostało usunięte')
+      mutate('/api/Tasks/getAllTasks').then(()=>setAsyncActionInProgress(false))
     })
   }
 
@@ -80,7 +84,7 @@ export default function Home({apiKey}: any) {
   },[completedType])
 
   const onSubmit = (modalData: {id?: string, description: string, type: TaskType}, update: boolean) =>{
-    setAsyncAction({...asyncAction, show:true})
+    setAsyncActionInProgress(true)
     let data:Tasks = {...modalData, userId: (session?.user as any).id, id: modalData.id ? modalData.id :'', done:false}
     fetch(update ?'/api/Tasks/updateTask' :'/api/Tasks/addTask', {
       method:update ? 'PUT' : 'POST',
@@ -90,7 +94,7 @@ export default function Home({apiKey}: any) {
       body: JSON.stringify(data)
     })
     .then(()=>{
-      setAsyncAction({...asyncAction, show:false})
+      setAsyncActionInProgress(false)
       setSuccess(true)
       mutate('/api/Tasks/getAllTasks')
         .then(()=>{
@@ -101,15 +105,21 @@ export default function Home({apiKey}: any) {
 
   const onComplete = (task: Tasks) => {
     let allTaskOfType = tasksList.filter(item => item.type === task.type)
-    setAsyncAction({show:true, type:'main', message:'Zmiana statusu zadania...'})
+    setAsyncActionInProgress(true)
+    setAsyncActionText('Zmiana statusu zadania...')
+    setAsyncActionType('main')
     fetch(`/api/Tasks/completeTask/${task.id}`, {method:'PUT'})
       .then(res=> res.json())
       .then(data => {
-      setAsyncAction({...asyncAction, type:'success', message:'Zadanie zostało ukończone'})
-        mutate('/api/Tasks/getAllTasks').then(()=> setAsyncAction({...asyncAction, show:false}))
+        setAsyncActionType('success')
+        setAsyncActionText('Zadanie zostało ukończone')
+        mutate('/api/Tasks/getAllTasks').then(()=> setAsyncActionInProgress(false))
         if(allTaskOfType.length === data.completedTasks){
+          setAsyncActionInProgress(true)
+          setAsyncActionType('main')
+          setAsyncActionText('Ładowanie zdjęcia...')
           setCompletedType(task.type)
-          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'})
+          fetch(`/api/Tasks/done/${task.type}`, {method:'PUT'}).then(()=>setAsyncActionInProgress(false))
         }
       })
   }
@@ -121,21 +131,16 @@ export default function Home({apiKey}: any) {
       renderAddButton={true}
       openModal={() => setOpenModal(true)}
       session={session} />
-      {asyncAction.show ? <Card css={{position:'fixed', bottom:'$4', right:'$4',bg:`var(--${asyncAction.type})`, w:'30%', minW:'fit-content', mw:'fit-content'}}>
+      {asyncActionInProgress ? <Card css={{position:'fixed', bottom:'$4', right:'$4', w:'30%', bg:`var(--${asyncActionType}})`, minW:'fit-content', mw:'fit-content'}}>
           <Card.Body css={{p:'10px', d:'flex', flexDirection:'row', alignItems:'center'}}>
-            {asyncAction.type === 'main' ? <Loading color="primary" textColor="primary" size='sm' /> : null}
-            <Text css={{pl:'$4'}} color={asyncAction.type === 'main' ? 'var(--gray)' : 'var(--main)'}>{asyncAction.message}</Text>
+            <Loading color="primary" textColor="primary" size='sm' />
+            <Text css={{pl:'$4'}}>{asyncActionText}</Text>
           </Card.Body>
     </Card>: null}
     <div style={{ width: '100%', minWidth: '100%', minHeight: '90vh', height:'fit-content', paddingInline: '0' }}>
-        <PhotoModal 
-          type={completedType} 
-          onClose={() => {setCompletedType(undefined); setPhoto(undefined)}} 
-          photo={photo}
-          onLoadingPhoto={(dto:asyncActionDto) => setAsyncAction(dto)}
-          />
+        <PhotoModal type={completedType} onClose={() => {setCompletedType(undefined); setPhoto(undefined)}} photo={photo}/>
         <AddModal
-          asyncAction={asyncAction.show}
+          asyncAction={asyncActionInProgress}
           visible={openModal}
           onClose={() => {setOpenModal(false); setEditTask(undefined)}}
           onSubmit={onSubmit}
@@ -164,3 +169,4 @@ export default function Home({apiKey}: any) {
 
 Home.auth = true
 
+export default Home
